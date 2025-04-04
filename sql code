@@ -1,0 +1,17 @@
+
+ WITH knock_lines AS (
+    SELECT dialogue
+    FROM sheldon
+    WHERE person_scene = 'Sheldon'
+      AND dialogue LIKE '%(Knock%'  
+),
+split_words AS (
+    SELECT 
+        value AS word
+    FROM knock_lines
+    CROSS APPLY STRING_SPLIT(dialogue, ' ')
+)
+SELECT COUNT(*) AS total_knocks
+FROM split_words
+WHERE LOWER(REPLACE(REPLACE(REPLACE(word, ',', ''), '.', ''), '!', '')) = 'knock';
+
